@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"os"
 	"time"
 )
 
@@ -42,7 +43,13 @@ func NewRepo(db *db.Queries) *repo {
 }
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
+	var ginMode string
+	if os.Getenv("release") == "true" {
+		ginMode = gin.ReleaseMode
+	} else {
+		ginMode = gin.DebugMode
+	}
+	gin.SetMode(ginMode)
 	var cfg config
 	cfg.env = "development"
 	cfg.db.dsn = "root:mypassword@tcp(127.0.0.1:3306)/lacubadb?parseTime=true"
