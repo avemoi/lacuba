@@ -64,6 +64,6 @@ func main() {
 
 	repo := NewRepo(db.New(conn))
 	router := repo.GetRoutes()
-	router.Run()
+	router.Run(":8081")
 
 }
