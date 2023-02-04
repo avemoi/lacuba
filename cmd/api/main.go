@@ -52,7 +52,7 @@ func main() {
 	gin.SetMode(ginMode)
 	var cfg config
 	cfg.env = "development"
-	cfg.db.dsn = "root:mypassword@tcp(127.0.0.1:3306)/lacubadb?parseTime=true"
+	cfg.db.dsn = "root:mypassword@tcp(127.0.0.1:3307)/lacubadb?parseTime=true"
 
 	conn, err := openDB(cfg)
 
