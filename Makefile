@@ -22,7 +22,7 @@ build:
 	go build -o lacuba github.com/avemoi/lacuba/cmd/api
 
 prod:
-	CGO_ENABLED=0 go build  github.com/avemoi/lacuba/cmd/api
+	export release=true && CGO_ENABLED=0 go build -o lacuba github.com/avemoi/lacuba/cmd/api
 
 
 .PHONY: postgres createdb dropdb migrateup migratedown
