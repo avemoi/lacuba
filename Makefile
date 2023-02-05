@@ -19,7 +19,7 @@ test:
 	go test -v -cover ./...
 
 build:
-	go build  github.com/avemoi/lacuba/cmd/api
+	go build -o lacuba github.com/avemoi/lacuba/cmd/api
 
 prod:
 	CGO_ENABLED=0 go build  github.com/avemoi/lacuba/cmd/api
