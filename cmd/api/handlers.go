@@ -8,9 +8,8 @@ import (
 	"log"
 )
 
-func (r *repo) getLacubas(c *gin.Context) {
-
-	res, err := r.db.ListLacubas(context.Background())
+func (app *Config) getLacubas(c *gin.Context) {
+	res, err := app.Models.db.ListLacubas(context.Background())
 	if err != nil {
 		c.String(200, "We have an error ffs")
 	}
@@ -20,12 +19,12 @@ func (r *repo) getLacubas(c *gin.Context) {
 	c.JSON(200, res)
 }
 
-func (r *repo) addLacuba(c *gin.Context) {
+func (app *Config) addLacuba(c *gin.Context) {
 	var newLacuba db.Lacuba
 	if err := c.BindJSON(&newLacuba); err != nil {
 		return
 	}
-	newlac, err := r.db.CreateLacuba(context.Background(), db.CreateLacubaParams{
+	newlac, err := app.Models.db.CreateLacuba(context.Background(), db.CreateLacubaParams{
 		Longtitude: newLacuba.Longtitude,
 		Latitude:   newLacuba.Latitude,
 	})
