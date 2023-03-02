@@ -68,7 +68,7 @@ func (m *Mail) sendMail(lacubaMsg LacubaMessage, errorChan chan error) {
 	server.Port = m.Port
 	server.Username = m.Username
 	server.Password = m.Password
-	server.Encryption = m.getEncryption(m.Encryption)
+	server.Encryption = mail.EncryptionSTARTTLS
 	server.KeepAlive = false
 	server.ConnectTimeout = 10 * time.Second
 	server.SendTimeout = 10 * time.Second
@@ -178,10 +178,10 @@ func (app *Config) createMail() Mail {
 
 	m := Mail{
 		Domain:      "localhost",
-		Host:        "localhost",
-		Port:        1028,
-		Username:    "",
-		Password:    "",
+		Host:        "smtp.gmail.com",
+		Port:        587,
+		Username:    "newlacuba@gmail.com",
+		Password:    "suidubqelzejeykh",
 		Encryption:  "none",
 		FromAddress: "",
 		FromName:    "LacubaInfo",

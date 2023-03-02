@@ -35,9 +35,9 @@ func (app *Config) addLacuba(c *gin.Context) {
 	fmt.Println(newLacuba.Longtitude)
 
 	msg := LacubaMessage{
-		From:     "testadd@gmail.cvopm",
+		From:     "newlacuba@gmail.com",
 		FromName: "harros",
-		To:       "ingo@tosend.com",
+		To:       "cmageiridis@gmail.com",
 		Subject:  "This is a sumbjecty",
 		Data:     "This is my message",
 		DataMap:  nil,
