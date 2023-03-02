@@ -10,42 +10,42 @@ import (
 )
 
 type Mail struct {
-	Domain      string
-	Host        string
-	Port        int
-	Username    string
-	Password    string
-	Encryption  string
-	FromAddress string
-	FromName    string
-	Wait        *sync.WaitGroup
-	MailerChan  chan LacubaMessage
-	ErrorChan   chan error
-	DoneChan    chan bool
+	Domain     string
+	Host       string
+	Port       int
+	Username   string
+	Password   string
+	Encryption string
+	ToAddress  string
+	FromName   string
+	Wait       *sync.WaitGroup
+	MailerChan chan LacubaMessage
+	ErrorChan  chan error
+	DoneChan   chan bool
 }
 
 type LacubaMessage struct {
-	From     string
-	FromName string
-	To       string
-	Subject  string
-	Data     any
-	DataMap  map[string]any
+	FromName  string
+	Subject   string
+	Data      any
+	DataMap   map[string]any
+	LacubaId  int64
+	LacubaLat float64
+	LacubaLng float64
 }
 
 func (m *Mail) sendMail(lacubaMsg LacubaMessage, errorChan chan error) {
 	defer m.Wait.Done()
-
-	if lacubaMsg.From == "" {
-		lacubaMsg.From = m.FromAddress
-	}
 
 	if lacubaMsg.FromName == "" {
 		lacubaMsg.FromName = m.FromName
 	}
 
 	data := map[string]any{
-		"message": lacubaMsg.Data,
+		"message":   lacubaMsg.Data,
+		"lacubaId":  lacubaMsg.LacubaId,
+		"lacubaLat": lacubaMsg.LacubaLat,
+		"lacubaLng": lacubaMsg.LacubaLng,
 	}
 
 	lacubaMsg.DataMap = data
@@ -78,7 +78,7 @@ func (m *Mail) sendMail(lacubaMsg LacubaMessage, errorChan chan error) {
 		errorChan <- err
 	}
 	email := mail.NewMSG()
-	email.SetFrom(lacubaMsg.From).AddTo(lacubaMsg.To).SetSubject(lacubaMsg.Subject)
+	email.SetFrom(m.Username).AddTo(m.ToAddress).SetSubject(lacubaMsg.Subject)
 	email.SetBody(mail.TextPlain, plainMessage)
 	email.AddAlternative(mail.TextHTML, formattedMessage)
 
@@ -105,14 +105,14 @@ func (m *Mail) buildPlainTextMessage(msg LacubaMessage) (string, error) {
 	return plainMessage, nil
 }
 
-func (m *Mail) buildHTMLMessage(msg LacubaMessage) (string, error) {
+func (m *Mail) buildHTMLMessage(lacubaMsg LacubaMessage) (string, error) {
 	templateToRender := "./cmd/templates/html-email.gohtml"
 	t, err := template.New("email-html").ParseFiles(templateToRender)
 	if err != nil {
 		return "", nil
 	}
 	var tpl bytes.Buffer
-	if err = t.ExecuteTemplate(&tpl, "body", msg.DataMap); err != nil {
+	if err = t.ExecuteTemplate(&tpl, "body", lacubaMsg.DataMap); err != nil {
 		return "", nil
 	}
 	formattedMessage := tpl.String()
@@ -142,20 +142,6 @@ func (m *Mail) inlineCSS(s string) (string, error) {
 
 }
 
-func (m *Mail) getEncryption(e string) mail.Encryption {
-	switch e {
-	case "tls":
-		return mail.EncryptionSTARTTLS
-	case "ssl":
-		return mail.EncryptionSSLTLS
-	case "none":
-		return mail.EncryptionNone
-	default:
-		return mail.EncryptionSTARTTLS
-
-	}
-}
-
 func (app *Config) listenForMail() {
 	for {
 		select {
@@ -177,18 +163,18 @@ func (app *Config) createMail() Mail {
 	mailerDoneChan := make(chan bool)
 
 	m := Mail{
-		Domain:      "localhost",
-		Host:        "smtp.gmail.com",
-		Port:        587,
-		Username:    "newlacuba@gmail.com",
-		Password:    "suidubqelzejeykh",
-		Encryption:  "none",
-		FromAddress: "",
-		FromName:    "LacubaInfo",
-		Wait:        app.Wait,
-		MailerChan:  mailerChan,
-		ErrorChan:   errorChan,
-		DoneChan:    mailerDoneChan,
+		Domain:     "localhost",
+		Host:       "smtp.gmail.com",
+		Port:       587,
+		Username:   "newlacuba@gmail.com",
+		Password:   "suidubqelzejeykh",
+		Encryption: "none",
+		ToAddress:  "",
+		FromName:   "LacubaInfo",
+		Wait:       app.Wait,
+		MailerChan: mailerChan,
+		ErrorChan:  errorChan,
+		DoneChan:   mailerDoneChan,
 	}
 
 	return m
