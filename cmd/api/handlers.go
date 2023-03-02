@@ -24,12 +24,24 @@ func (app *Config) addLacuba(c *gin.Context) {
 	if err := c.BindJSON(&newLacuba); err != nil {
 		return
 	}
-	newlac, err := app.Models.db.CreateLacuba(context.Background(), db.CreateLacubaParams{
+	_, err := app.Models.db.CreateLacuba(context.Background(), db.CreateLacubaParams{
 		Longtitude: newLacuba.Longtitude,
 		Latitude:   newLacuba.Latitude,
 	})
 	if err != nil {
 		log.Fatal("error", err)
 	}
-	fmt.Println(newlac)
+	fmt.Println(newLacuba.Latitude)
+	fmt.Println(newLacuba.Longtitude)
+
+	msg := LacubaMessage{
+		From:     "testadd@gmail.cvopm",
+		FromName: "harros",
+		To:       "ingo@tosend.com",
+		Subject:  "This is a sumbjecty",
+		Data:     "This is my message",
+		DataMap:  nil,
+	}
+
+	app.sendEmail(msg)
 }

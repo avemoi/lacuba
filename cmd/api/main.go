@@ -14,7 +14,13 @@ import (
 
 func main() {
 	connDB := initDB()
-	defer connDB.Close()
+
+	defer func(connDB *sql.DB) {
+		err := connDB.Close()
+		if err != nil {
+			log.Panicln(err)
+		}
+	}(connDB)
 
 	// create loggers
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -38,6 +44,9 @@ func main() {
 	gin.SetMode(app.env)
 
 	app.Models = NewRepo(db.New(connDB))
+
+	app.Mailer = app.createMail()
+	go app.listenForMail()
 
 	router := app.GetRoutes()
 	router.Run(fmt.Sprintf(":%s", os.Getenv("GINPORT")))

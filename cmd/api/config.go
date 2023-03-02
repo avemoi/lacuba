@@ -22,4 +22,5 @@ type Config struct {
 	env      string
 	Wait     *sync.WaitGroup
 	Models   *models
+	Mailer   Mail
 }
