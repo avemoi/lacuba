@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	db "github.com/avemoi/lacuba/db/sqlc"
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
 )
 
 func (app *Config) getLacubas(c *gin.Context) {
@@ -47,4 +49,12 @@ func (app *Config) addLacuba(c *gin.Context) {
 	}
 
 	app.sendEmail(msg)
+}
+
+func (app *Config) getRemoveLacubaForm(c *gin.Context) {
+	c.HTML(http.StatusOK, "remove-lacuba-form.gohtml", gin.H{})
+}
+
+func (app *Config) postRemoveLacubaForm(c *gin.Context) {
+	fmt.Println("removing")
 }
