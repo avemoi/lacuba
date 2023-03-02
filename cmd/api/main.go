@@ -46,7 +46,7 @@ func main() {
 	app.Models = NewRepo(db.New(connDB))
 
 	app.Mailer = app.createMail()
-	app.Mailer.ToAddress = "cmageiridis@gmail.com" // Change this
+	app.Mailer.ToAddress = "petrokeraso@gmail.com" // Change this
 	go app.listenForMail()
 
 	router := app.GetRoutes()

@@ -38,7 +38,7 @@ func (app *Config) addLacuba(c *gin.Context) {
 
 	msg := LacubaMessage{
 		FromName:  "harros",
-		Subject:   "This is a sumbjecty",
+		Subject:   "New Lacuba!",
 		Data:      "This is my message",
 		DataMap:   nil,
 		LacubaId:  newLacubaId,
