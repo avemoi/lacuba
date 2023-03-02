@@ -29,6 +29,16 @@ func (q *Queries) CreateLacuba(ctx context.Context, arg CreateLacubaParams) (sql
 	return q.db.ExecContext(ctx, createLacuba, arg.Longtitude, arg.Latitude)
 }
 
+const deleteLacuba = `-- name: DeleteLacuba :exec
+DELETE FROM lacuba
+WHERE id = ?
+`
+
+func (q *Queries) DeleteLacuba(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteLacuba, id)
+	return err
+}
+
 const getLacuba = `-- name: GetLacuba :one
 
 

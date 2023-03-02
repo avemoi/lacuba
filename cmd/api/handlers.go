@@ -6,6 +6,8 @@ import (
 	db "github.com/avemoi/lacuba/db/sqlc"
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
+	"strconv"
 )
 
 func (app *Config) getLacubas(c *gin.Context) {
@@ -24,12 +26,56 @@ func (app *Config) addLacuba(c *gin.Context) {
 	if err := c.BindJSON(&newLacuba); err != nil {
 		return
 	}
-	newlac, err := app.Models.db.CreateLacuba(context.Background(), db.CreateLacubaParams{
+	lacubaResult, err := app.Models.db.CreateLacuba(context.Background(), db.CreateLacubaParams{
 		Longtitude: newLacuba.Longtitude,
 		Latitude:   newLacuba.Latitude,
 	})
 	if err != nil {
 		log.Fatal("error", err)
 	}
-	fmt.Println(newlac)
+
+	newLacubaId, err := lacubaResult.LastInsertId()
+	if err != nil {
+		log.Fatal("error", err)
+	}
+
+	msg := LacubaMessage{
+		FromName:  "harros",
+		Subject:   "New Lacuba!",
+		Data:      "This is my message",
+		DataMap:   nil,
+		LacubaId:  newLacubaId,
+		LacubaLat: newLacuba.Latitude,
+		LacubaLng: newLacuba.Longtitude,
+	}
+
+	token, err := encryptToken(authToken, postFormID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	msg.LacubaAuth = token
+	app.sendEmail(msg)
+}
+
+func (app *Config) getRemoveLacubaForm(c *gin.Context) {
+	c.HTML(http.StatusOK, "remove-lacuba-form.gohtml", gin.H{})
+
+}
+
+func (app *Config) postRemoveLacubaForm(c *gin.Context) {
+	lacubaId, err := strconv.Atoi(c.DefaultQuery("id", ""))
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": "failed",
+		})
+		return
+	}
+	err = app.Models.db.DeleteLacuba(context.Background(), int64(lacubaId))
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": "failed",
+		})
+		return
+	}
+	c.HTML(http.StatusOK, "remove-lacuba-success.gohtml", gin.H{})
 }
