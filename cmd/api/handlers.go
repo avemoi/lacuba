@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func (app *Config) getLacubas(c *gin.Context) {
@@ -62,5 +63,19 @@ func (app *Config) getRemoveLacubaForm(c *gin.Context) {
 }
 
 func (app *Config) postRemoveLacubaForm(c *gin.Context) {
+	lacubaId, err := strconv.Atoi(c.DefaultQuery("id", ""))
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": "failed",
+		})
+		return
+	}
+	err = app.Models.db.DeleteLacuba(context.Background(), int64(lacubaId))
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": "failed",
+		})
+		return
+	}
 	c.HTML(http.StatusOK, "remove-lacuba-success.gohtml", gin.H{})
 }
