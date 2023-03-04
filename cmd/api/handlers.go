@@ -48,11 +48,27 @@ func (app *Config) addLacuba(c *gin.Context) {
 		LacubaLng: newLacuba.Longtitude,
 	}
 
+	token, err := encryptToken(authToken, postFormID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	msg.LacubaAuth = token
 	app.sendEmail(msg)
 }
 
 func (app *Config) getRemoveLacubaForm(c *gin.Context) {
-	c.HTML(http.StatusOK, "remove-lacuba-form.gohtml", gin.H{})
+	encrAuth := c.DefaultQuery("auth", "")
+	decrypted, err := decryptToken(authToken, encrAuth)
+	if err != nil {
+		fmt.Println(err)
+		c.AbortWithStatusJSON(400, nil)
+	}
+	if decrypted == postFormID {
+		c.HTML(http.StatusOK, "remove-lacuba-form.gohtml", gin.H{})
+	} else {
+		c.AbortWithStatusJSON(400, nil)
+	}
+
 }
 
 func (app *Config) postRemoveLacubaForm(c *gin.Context) {

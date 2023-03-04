@@ -12,8 +12,8 @@ func (app *Config) GetRoutes() *gin.Engine {
 	}
 	actions := router.Group("/lacuba")
 	{
-		actions.GET("/remove-lacuba", app.getRemoveLacubaForm)
-		actions.POST("/remove-lacuba", app.postRemoveLacubaForm)
+		actions.GET("/remove", app.getRemoveLacubaForm)
+		actions.POST("/remove", app.postRemoveLacubaForm)
 	}
 	return router
 }

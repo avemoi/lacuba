@@ -12,6 +12,9 @@ import (
 	"time"
 )
 
+// postFormID is used for get/post lacuba form in email link
+const postFormID string = "weyt32764@^67dg"
+
 func main() {
 	connDB := initDB()
 
@@ -46,7 +49,7 @@ func main() {
 	app.Models = NewRepo(db.New(connDB))
 
 	app.Mailer = app.createMail()
-	app.Mailer.ToAddress = "petrokeraso@gmail.com" // Change this
+	app.Mailer.ToAddress = "cmageiridis@gmail.com" // Change this
 	go app.listenForMail()
 
 	router := app.GetRoutes()

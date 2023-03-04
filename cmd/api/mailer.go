@@ -25,13 +25,14 @@ type Mail struct {
 }
 
 type LacubaMessage struct {
-	FromName  string
-	Subject   string
-	Data      any
-	DataMap   map[string]any
-	LacubaId  int64
-	LacubaLat float64
-	LacubaLng float64
+	FromName   string
+	Subject    string
+	Data       any
+	DataMap    map[string]any
+	LacubaId   int64
+	LacubaLat  float64
+	LacubaLng  float64
+	LacubaAuth string
 }
 
 func (m *Mail) sendMail(lacubaMsg LacubaMessage, errorChan chan error) {
@@ -42,10 +43,11 @@ func (m *Mail) sendMail(lacubaMsg LacubaMessage, errorChan chan error) {
 	}
 
 	data := map[string]any{
-		"message":   lacubaMsg.Data,
-		"lacubaId":  lacubaMsg.LacubaId,
-		"lacubaLat": lacubaMsg.LacubaLat,
-		"lacubaLng": lacubaMsg.LacubaLng,
+		"message":    lacubaMsg.Data,
+		"lacubaId":   lacubaMsg.LacubaId,
+		"lacubaLat":  lacubaMsg.LacubaLat,
+		"lacubaLng":  lacubaMsg.LacubaLng,
+		"lacubaAuth": lacubaMsg.LacubaAuth,
 	}
 
 	lacubaMsg.DataMap = data
