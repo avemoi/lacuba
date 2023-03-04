@@ -19,3 +19,23 @@ func TokenAuthentication() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func QueryParamAuthorization() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authq := c.Query("auth")
+		decrypted, err := decryptToken(authToken, authq)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "Unauthorized",
+			})
+			return
+		}
+		if decrypted != postFormID {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"error": "Unauthorized",
+			})
+			return
+		}
+		c.Next()
+	}
+}

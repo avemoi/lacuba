@@ -57,20 +57,10 @@ func (app *Config) addLacuba(c *gin.Context) {
 }
 
 func (app *Config) getRemoveLacubaForm(c *gin.Context) {
-	encrAuth := c.DefaultQuery("auth", "")
-	decrypted, err := decryptToken(authToken, encrAuth)
-	if err != nil {
-		fmt.Println(err)
-		c.AbortWithStatusJSON(400, nil)
-	}
-	if decrypted == postFormID {
-		c.HTML(http.StatusOK, "remove-lacuba-form.gohtml", gin.H{})
-	} else {
-		c.AbortWithStatusJSON(400, nil)
-	}
+	c.HTML(http.StatusOK, "remove-lacuba-form.gohtml", gin.H{})
 
 }
 
 func (app *Config) postRemoveLacubaForm(c *gin.Context) {
-	fmt.Println("removing")
+	c.HTML(http.StatusOK, "remove-lacuba-success.gohtml", gin.H{})
 }
