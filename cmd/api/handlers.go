@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	db "github.com/avemoi/lacuba/db/sqlc"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -39,22 +38,29 @@ func (app *Config) addLacuba(c *gin.Context) {
 		log.Fatal("error", err)
 	}
 
-	msg := LacubaMessage{
-		FromName:  "harros",
-		Subject:   "New Lacuba!",
-		Data:      "This is my message",
-		DataMap:   nil,
-		LacubaId:  newLacubaId,
-		LacubaLat: newLacuba.Latitude,
-		LacubaLng: newLacuba.Longtitude,
-	}
+	//msg := LacubaMessage{
+	//	FromName:  "harros",
+	//	Subject:   "New Lacuba!",
+	//	Data:      "This is my message",
+	//	DataMap:   nil,
+	//	LacubaId:  newLacubaId,
+	//	LacubaLat: newLacuba.Latitude,
+	//	LacubaLng: newLacuba.Longtitude,
+	//}
 
 	token, err := encryptToken(authToken, postFormID)
-	if err != nil {
-		fmt.Println(err)
-	}
-	msg.LacubaAuth = token
-	app.sendEmail(msg)
+	res := make(map[string]any)
+	res["lat"] = newLacuba.Latitude
+	res["lng"] = newLacuba.Longtitude
+	res["lacId"] = newLacubaId
+	res["lacAuth"] = token
+
+	c.JSON(200, res)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//msg.LacubaAuth = token
+	//app.sendEmail(msg)
 }
 
 func (app *Config) getRemoveLacubaForm(c *gin.Context) {
