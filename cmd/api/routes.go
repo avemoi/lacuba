@@ -10,7 +10,7 @@ func (app *Config) GetRoutes() *gin.Engine {
 		lacuba.GET("/list", app.getLacubas)
 		lacuba.POST("/", app.addLacuba)
 	}
-	actions := router.Group("/lacuba")
+	actions := router.Group("/lacuba", QueryParamAuthorization())
 	{
 		actions.GET("/remove", app.getRemoveLacubaForm)
 		actions.POST("/remove", app.postRemoveLacubaForm)
