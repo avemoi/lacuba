@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	db "github.com/avemoi/lacuba/db/sqlc"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -61,17 +60,17 @@ func (app *Config) addLacuba(c *gin.Context) {
 	//}
 
 	// Refactor to use UUIDs...
-	lacubaIdEncr, err := encryptToken(authToken, newLacubaIdStr)
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	//lacubaIdEncr, err := encryptToken(authToken, newLacubaIdStr)
+	//
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
 
 	res := make(map[string]any)
 	res["lat"] = newLacuba.Latitude
 	res["lng"] = newLacuba.Longtitude
-	res["lacId"] = lacubaIdEncr
+	res["lacId"] = newLacubaIdStr
 	//res["lacAuth"] = token
 
 	c.JSON(200, res)
@@ -87,14 +86,14 @@ func (app *Config) getRemoveLacubaForm(c *gin.Context) {
 
 func (app *Config) postRemoveLacubaForm(c *gin.Context) {
 	temp1 := c.DefaultQuery("id", "")
-	decrypted, err := decryptToken(authToken, temp1)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "Unauthorized",
-		})
-		return
-	}
-	lacubaId, err := strconv.Atoi(decrypted)
+	//decrypted, err := decryptToken(authToken, temp1)
+	//if err != nil {
+	//	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+	//		"error": "Unauthorized",
+	//	})
+	//	return
+	//}
+	lacubaId, err := strconv.Atoi(temp1)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
