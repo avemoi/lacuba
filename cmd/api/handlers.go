@@ -51,11 +51,14 @@ func (app *Config) addLacuba(c *gin.Context) {
 
 	newLacubaIdStr := strconv.Itoa(int(newLacubaId))
 
-	token, err := encryptToken(authToken, postFormID)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	// Issue when sending email using gmail app, it removes '='
+	// from base64 and the whole &auth, i will remove completely the
+	// auth token
+	//token, err := encryptToken(authToken, postFormID)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
 
 	// Refactor to use UUIDs...
 	lacubaIdEncr, err := encryptToken(authToken, newLacubaIdStr)
@@ -69,7 +72,7 @@ func (app *Config) addLacuba(c *gin.Context) {
 	res["lat"] = newLacuba.Latitude
 	res["lng"] = newLacuba.Longtitude
 	res["lacId"] = lacubaIdEncr
-	res["lacAuth"] = token
+	//res["lacAuth"] = token
 
 	c.JSON(200, res)
 
