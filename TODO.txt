@@ -1,0 +1,5 @@
+Remove tokens from code and make them env vars.
+Create uuid for each lacuba and use this for removal in url params instead of id.
+csrf for post remove lacuba.
+use template inheritance.
+Remove SMTP details from code and make then env vars.

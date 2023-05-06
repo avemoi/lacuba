@@ -17,3 +17,7 @@ INSERT INTO lacuba (
 
 -- name: ListLacubas :many
 SELECT * FROM lacuba;
+
+-- name: DeleteLacuba :exec
+DELETE FROM lacuba
+WHERE id = ?;

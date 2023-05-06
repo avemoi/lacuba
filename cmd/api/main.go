@@ -12,9 +12,18 @@ import (
 	"time"
 )
 
+// postFormID is used for get/post lacuba form in email link
+const postFormID string = "weyt32764@^67dg"
+
 func main() {
 	connDB := initDB()
-	defer connDB.Close()
+
+	defer func(connDB *sql.DB) {
+		err := connDB.Close()
+		if err != nil {
+			log.Panicln(err)
+		}
+	}(connDB)
 
 	// create loggers
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -38,6 +47,10 @@ func main() {
 	gin.SetMode(app.env)
 
 	app.Models = NewRepo(db.New(connDB))
+
+	app.Mailer = app.createMail()
+	app.Mailer.ToAddress = "cmageiridis@gmail.com" // Change this
+	go app.listenForMail()
 
 	router := app.GetRoutes()
 	router.Run(fmt.Sprintf(":%s", os.Getenv("GINPORT")))
